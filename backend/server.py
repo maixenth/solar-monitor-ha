@@ -308,6 +308,63 @@ scheduler = AsyncIOScheduler()
 async def collect_readings():
     """Background task to collect readings from all inverters"""
     try:
+        # Mode HOME_ASSISTANT: Read from Home Assistant instead of physical inverters
+        if INVERTER_MODE == 'HOME_ASSISTANT':
+            ha_reader = get_ha_reader()
+            if ha_reader:
+                # Get Home Assistant configuration from database
+                ha_config = await db.home_assistant_config.find_one({}, {"_id": 0})
+                if ha_config and ha_config.get('enabled') and ha_config.get('entity_mapping'):
+                    entity_mapping = ha_config['entity_mapping']
+                    solar_data = ha_reader.read_solar_data(entity_mapping)
+                    reading_data = ha_reader.map_to_inverter_reading(solar_data, BATTERY_CAPACITY_KWH)
+                    
+                    # Create virtual inverter if not exists
+                    virtual_inv = await db.inverters.find_one({"name": "Home Assistant"})
+                    if not virtual_inv:
+                        virtual_inv = Inverter(
+                            name="Home Assistant",
+                            brand="HOME_ASSISTANT",
+                            connection_type="API",
+                            port="N/A",
+                            baudrate=0,
+                            battery_capacity=BATTERY_CAPACITY_KWH,
+                            status="connected"
+                        )
+                        doc = virtual_inv.model_dump()
+                        doc['created_at'] = doc['created_at'].isoformat()
+                        if doc['last_reading']:
+                            doc['last_reading'] = doc['last_reading'].isoformat()
+                        await db.inverters.insert_one(doc)
+                        virtual_inv = doc
+                    
+                    # Create reading
+                    reading = InverterReading(
+                        inverter_id=virtual_inv['id'],
+                        **reading_data
+                    )
+                    
+                    # Store reading
+                    reading_dict = reading.model_dump()
+                    reading_dict['timestamp'] = reading_dict['timestamp'].isoformat()
+                    await db.readings.insert_one(reading_dict)
+                    
+                    # Update inverter
+                    await db.inverters.update_one(
+                        {"id": virtual_inv['id']},
+                        {"$set": {
+                            "last_reading": datetime.now(timezone.utc).isoformat(),
+                            "status": "connected"
+                        }}
+                    )
+                    
+                    logger.info("✅ Home Assistant reading collected")
+                    return
+            else:
+                logger.warning("⚠️ Home Assistant mode enabled but reader not initialized")
+                return
+        
+        # Original modes: REAL and SIMULATION
         inverters = await db.inverters.find({"status": "connected"}).to_list(100)
         
         for inv in inverters:

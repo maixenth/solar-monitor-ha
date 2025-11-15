@@ -15,6 +15,15 @@ import random
 from inverter_scanner import auto_discover_inverters
 from network_info import get_network_info
 from inverter_reader import read_inverter_data, close_all_connections
+from home_assistant_reader import (
+    initialize_ha_reader, 
+    get_ha_reader, 
+    HomeAssistantReader
+)
+from weather_service import (
+    initialize_weather_service,
+    get_weather_service
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')

@@ -49,6 +49,14 @@ logger = logging.getLogger(__name__)
 INVERTER_MODE = os.environ.get('INVERTER_MODE', 'SIMULATION').upper()
 logger.info(f"🔧 Mode onduleurs: {INVERTER_MODE}")
 
+# Battery configuration
+BATTERY_CAPACITY_KWH = float(os.environ.get('BATTERY_CAPACITY_KWH', '27.2'))
+logger.info(f"🔋 Capacité batterie: {BATTERY_CAPACITY_KWH} kWh")
+
+# Home Assistant configuration
+HA_URL = os.environ.get('HOME_ASSISTANT_URL', '')
+HA_TOKEN = os.environ.get('HOME_ASSISTANT_TOKEN', '')
+
 # ===================== MODELS =====================
 
 class InverterCreate(BaseModel):

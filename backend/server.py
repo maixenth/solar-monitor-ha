@@ -437,7 +437,184 @@ async def collect_readings():
 
 @api_router.get("/")
 async def root():
-    return {"message": "Solar Monitoring API with Energy Management"}
+    return {"message": "Solar Monitoring API with Energy Management and Home Assistant"}
+
+# ===== HOME ASSISTANT =====
+
+@api_router.post("/home-assistant/test")
+async def test_home_assistant_connection(config: HomeAssistantConfigCreate):
+    """Test Home Assistant connection"""
+    try:
+        reader = HomeAssistantReader(config.url, config.token)
+        result = reader.test_connection()
+        return result
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error: {str(e)}"
+        }
+
+@api_router.post("/home-assistant/config")
+async def save_home_assistant_config(config: HomeAssistantConfigCreate):
+    """Save Home Assistant configuration"""
+    try:
+        # Test connection first
+        reader = HomeAssistantReader(config.url, config.token)
+        test_result = reader.test_connection()
+        
+        if not test_result["success"]:
+            raise HTTPException(status_code=400, detail=test_result["message"])
+        
+        # Initialize global reader
+        success = initialize_ha_reader(config.url, config.token)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to initialize Home Assistant reader")
+        
+        # Save to database
+        ha_config = HomeAssistantConfig(
+            url=config.url,
+            token=config.token,
+            last_test=datetime.now(timezone.utc),
+            last_test_success=True
+        )
+        
+        doc = ha_config.model_dump()
+        doc['created_at'] = doc['created_at'].isoformat()
+        if doc['last_test']:
+            doc['last_test'] = doc['last_test'].isoformat()
+        
+        # Remove existing config and insert new one
+        await db.home_assistant_config.delete_many({})
+        await db.home_assistant_config.insert_one(doc)
+        
+        # Update .env file
+        env_path = ROOT_DIR / '.env'
+        env_content = env_path.read_text() if env_path.exists() else ""
+        
+        # Update or add HOME_ASSISTANT_URL and TOKEN
+        lines = env_content.split('\n')
+        url_found = False
+        token_found = False
+        
+        for i, line in enumerate(lines):
+            if line.startswith('HOME_ASSISTANT_URL='):
+                lines[i] = f'HOME_ASSISTANT_URL="{config.url}"'
+                url_found = True
+            elif line.startswith('HOME_ASSISTANT_TOKEN='):
+                lines[i] = f'HOME_ASSISTANT_TOKEN="{config.token}"'
+                token_found = True
+        
+        if not url_found:
+            lines.append(f'HOME_ASSISTANT_URL="{config.url}"')
+        if not token_found:
+            lines.append(f'HOME_ASSISTANT_TOKEN="{config.token}"')
+        
+        env_path.write_text('\n'.join(lines))
+        
+        return {
+            "message": "Home Assistant configuration saved successfully",
+            "version": test_result.get("version")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error saving Home Assistant config: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/home-assistant/config")
+async def get_home_assistant_config():
+    """Get Home Assistant configuration (without token)"""
+    config = await db.home_assistant_config.find_one({}, {"_id": 0, "token": 0})
+    if not config:
+        return {"configured": False}
+    
+    if isinstance(config.get('created_at'), str):
+        config['created_at'] = datetime.fromisoformat(config['created_at'])
+    if config.get('last_test') and isinstance(config['last_test'], str):
+        config['last_test'] = datetime.fromisoformat(config['last_test'])
+    
+    config["configured"] = True
+    return config
+
+@api_router.get("/home-assistant/entities")
+async def get_home_assistant_entities():
+    """Get all entities from Home Assistant"""
+    ha_reader = get_ha_reader()
+    if not ha_reader:
+        raise HTTPException(status_code=400, detail="Home Assistant not configured")
+    
+    try:
+        entities = ha_reader.get_all_entities()
+        return {
+            "total": len(entities),
+            "entities": entities
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/home-assistant/detect-solar")
+async def detect_solar_assistant_entities():
+    """Automatically detect Solar Assistant entities"""
+    ha_reader = get_ha_reader()
+    if not ha_reader:
+        raise HTTPException(status_code=400, detail="Home Assistant not configured")
+    
+    try:
+        solar_entities = ha_reader.detect_solar_assistant_entities()
+        return solar_entities
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/home-assistant/entity-mapping")
+async def update_entity_mapping(mapping: HomeAssistantEntityMapping):
+    """Update entity mapping for data collection"""
+    config = await db.home_assistant_config.find_one({})
+    if not config:
+        raise HTTPException(status_code=404, detail="Home Assistant not configured")
+    
+    # Convert mapping to dict and remove None values
+    mapping_dict = {k: v for k, v in mapping.model_dump().items() if v is not None}
+    
+    await db.home_assistant_config.update_one(
+        {"id": config['id']},
+        {"$set": {"entity_mapping": mapping_dict}}
+    )
+    
+    return {"message": "Entity mapping updated successfully"}
+
+# ===== WEATHER =====
+
+@api_router.get("/weather/current")
+async def get_current_weather():
+    """Get current weather for Cotonou"""
+    weather_service = get_weather_service()
+    if not weather_service:
+        return {"error": "Weather service not initialized", "mock": True}
+    
+    try:
+        weather_data = weather_service.get_current_weather()
+        if weather_data:
+            # Add solar production estimate
+            production_estimate = weather_service.estimate_solar_production(weather_data)
+            weather_data["solar_estimate"] = production_estimate
+        return weather_data
+    except Exception as e:
+        logger.error(f"Error getting weather: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/weather/forecast")
+async def get_weather_forecast(days: int = 5):
+    """Get weather forecast"""
+    weather_service = get_weather_service()
+    if not weather_service:
+        return {"error": "Weather service not initialized", "mock": True}
+    
+    try:
+        return weather_service.get_forecast(days)
+    except Exception as e:
+        logger.error(f"Error getting forecast: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ===== INVERTERS =====
 

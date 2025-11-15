@@ -169,6 +169,33 @@ class DashboardStats(BaseModel):
     current_source: str  # "solar", "battery", "grid", "mixed"
     management_mode: str  # "manual" or "automatic"
 
+# ===== HOME ASSISTANT MODELS =====
+
+class HomeAssistantConfig(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    url: str
+    token: str
+    entity_mapping: Dict[str, str] = {}  # Maps data types to entity IDs
+    enabled: bool = True
+    last_test: Optional[datetime] = None
+    last_test_success: Optional[bool] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class HomeAssistantConfigCreate(BaseModel):
+    url: str
+    token: str
+
+class HomeAssistantEntityMapping(BaseModel):
+    solar_power: Optional[str] = None
+    battery_soc: Optional[str] = None
+    battery_power: Optional[str] = None
+    grid_power: Optional[str] = None
+    load_power: Optional[str] = None
+    energy_today: Optional[str] = None
+    energy_total: Optional[str] = None
+
 # ===================== SIMULATED READINGS =====================
 
 async def simulate_reading(inverter_id: str, brand: str) -> InverterReading:

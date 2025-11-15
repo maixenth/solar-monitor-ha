@@ -74,6 +74,21 @@ const Sidebar = () => {
           </NavLink>
 
           <NavLink
+            to="/home-assistant"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
+                isActive
+                  ? "bg-emerald-100 text-emerald-700"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`
+            }
+            data-testid="nav-home-assistant"
+          >
+            <Plug className="w-5 h-5" />
+            Home Assistant
+          </NavLink>
+
+          <NavLink
             to="/settings"
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${

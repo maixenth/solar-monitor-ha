@@ -1,0 +1,207 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║    🌞 SOLAR MONITOR - INSTALLATION UBUNTU (Plus Rapide !)    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+🎯 POURQUOI UBUNTU EST MEILLEUR
+
+✅ 3-5x plus rapide que Raspberry Pi
+✅ Plus de RAM et CPU disponibles
+✅ Interface React fluide
+✅ MongoDB fonctionne parfaitement
+✅ Meilleure expérience utilisateur
+
+
+═══════════════════════════════════════════════════════════════
+  COMPATIBLE AVEC
+═══════════════════════════════════════════════════════════════
+
+✅ Ubuntu 20.04, 22.04, 24.04
+✅ Linux Mint
+✅ Debian 10+
+✅ Pop!_OS
+✅ Tout Linux avec GNOME/KDE
+
+
+═══════════════════════════════════════════════════════════════
+  INSTALLATION RAPIDE (10 minutes)
+═══════════════════════════════════════════════════════════════
+
+
+ÉTAPE 1 : Télécharger depuis GitHub
+───────────────────────────────────
+
+1. Allez sur github.com (votre compte)
+2. Ouvrez le projet "solar-monitor"
+3. Bouton vert "Code" → "Download ZIP"
+4. Enregistrez sur votre PC Ubuntu
+
+
+ÉTAPE 2 : Extraire et Installer
+────────────────────────────────
+
+1. Décompressez le ZIP dans votre dossier Documents
+   (Clic droit → "Extract Here")
+
+2. Ouvrez le dossier solar-monitor
+
+3. Double-cliquez sur : INSTALLER_UBUNTU.sh
+   → Choisissez "Run" ou "Execute"
+
+4. Appuyez sur Entrée
+
+5. Entrez votre mot de passe quand demandé
+
+6. ☕ Attendez 10 minutes (plus rapide que Raspberry Pi !)
+
+
+ÉTAPE 3 : Déconnexion/Reconnexion
+──────────────────────────────────
+
+Pour activer les permissions série :
+
+Option A : Quand demandé à la fin, tapez "o" → Déconnexion auto
+Option B : Menu → Déconnexion → Reconnexion
+
+
+ÉTAPE 4 : Lancer l'Application
+───────────────────────────────
+
+1. Retournez dans le dossier solar-monitor
+
+2. Double-cliquez sur : start_app.sh
+
+3. Le navigateur s'ouvre automatiquement sur localhost:3000
+
+4. ✅ L'APPLICATION EST LANCÉE !
+
+
+═══════════════════════════════════════════════════════════════
+  DIFFÉRENCES UBUNTU vs RASPBERRY PI
+═══════════════════════════════════════════════════════════════
+
+VITESSE :
+  Raspberry Pi : Lent, peut freeze
+  Ubuntu PC    : Rapide et fluide ✅
+
+COMPILATION REACT :
+  Raspberry Pi : 3-5 minutes
+  Ubuntu PC    : 30-60 secondes ✅
+
+MONGODB :
+  Raspberry Pi : Parfois problèmes
+  Ubuntu PC    : Fonctionne parfaitement ✅
+
+MÉMOIRE :
+  Raspberry Pi : 1-4 GB RAM (limité)
+  Ubuntu PC    : 8+ GB RAM (confortable) ✅
+
+
+═══════════════════════════════════════════════════════════════
+  CONNEXION ONDULEURS SUR UBUNTU
+═══════════════════════════════════════════════════════════════
+
+C'EST EXACTEMENT PAREIL que sur Raspberry Pi !
+
+1. Branchez le câble USB de l'onduleur sur le PC Ubuntu
+
+2. Vérifiez la détection :
+   Ouvrez un Terminal
+   Tapez : ls -la /dev/tty* | grep USB
+
+3. Vous devriez voir /dev/ttyUSB0 ou /dev/ttyUSB1
+
+4. Dans l'application :
+   - Paramètres → Mode REAL
+   - Onduleurs → Scanner automatiquement
+
+5. ✅ Onduleur détecté !
+
+
+═══════════════════════════════════════════════════════════════
+  UTILISATION QUOTIDIENNE
+═══════════════════════════════════════════════════════════════
+
+DÉMARRER :
+  → Double-clic : start_app.sh
+  → Le navigateur s'ouvre automatiquement
+
+ARRÊTER :
+  → Double-clic : stop_app.sh
+
+ACCÈS :
+  → localhost:3000 dans le navigateur
+
+
+═══════════════════════════════════════════════════════════════
+  AVANTAGES UBUNTU POUR VOTRE CAS
+═══════════════════════════════════════════════════════════════
+
+✅ Pas de problème de lenteur
+✅ Pas de freeze pendant l'ajout d'onduleur
+✅ Scan automatique RAPIDE (2-3 secondes au lieu de 10+)
+✅ Interface responsive
+✅ Graphiques fluides
+✅ Peut rester allumé 24/7 comme un serveur
+✅ Plus de puissance pour les calculs
+
+
+═══════════════════════════════════════════════════════════════
+  ACCÈS DISTANT (Bonus)
+═══════════════════════════════════════════════════════════════
+
+Votre PC Ubuntu peut servir de serveur.
+
+Sur votre téléphone/tablette (même WiFi) :
+
+1. Dans l'appli → Paramètres → Notez l'IP (ex: 192.168.1.100)
+2. Sur téléphone → Navigateur → http://192.168.1.100:3000
+3. ✅ Accès à distance !
+
+
+═══════════════════════════════════════════════════════════════
+  FAQ
+═══════════════════════════════════════════════════════════════
+
+Q: Mon Raspberry Pi deviendra inutile ?
+A: Vous pouvez le garder en backup ou pour d'autres projets
+
+Q: Les données du Raspberry Pi sont perdues ?
+A: Oui, c'est une nouvelle installation. Mais vous êtes en
+   mode SIMULATION donc pas de vraies données encore.
+
+Q: Je peux utiliser mes 2 onduleurs sur Ubuntu ?
+A: OUI ! Exactement pareil que sur Raspberry Pi, mais plus
+   rapide à détecter et afficher.
+
+Q: Ubuntu consomme plus d'électricité ?
+A: Oui, un PC consomme 30-100W vs Raspberry Pi 5-15W
+   Mais vous pouvez mettre le PC en veille la nuit.
+
+Q: Je peux installer sur un vieux PC ?
+A: OUI ! Même un PC de 2015 avec 4GB RAM sera plus rapide
+   que le Raspberry Pi pour cette application.
+
+
+═══════════════════════════════════════════════════════════════
+  RECOMMANDATION
+═══════════════════════════════════════════════════════════════
+
+Pour votre cas (lenteur + 2 onduleurs + utilisation régulière) :
+
+👉 UBUNTU EST LE MEILLEUR CHOIX ! 👈
+
+Installation identique, mais :
+  ⚡ 5x plus rapide
+  🚀 Interface fluide
+  ✅ Pas de freeze
+  💪 Détection onduleurs instantanée
+
+
+═══════════════════════════════════════════════════════════════
+
+🌞 Profitez d'une expérience RAPIDE et FLUIDE sur Ubuntu ! 🌞
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,169 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     🌞 SOLAR MONITOR - COMMENT INSTALLER (SUPER SIMPLE)      ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+📥 VOUS AVEZ TÉLÉCHARGÉ CE DOSSIER DEPUIS GITHUB
+
+┌───────────────────────────────────────────────────────────────┐
+│                                                               │
+│  INSTALLATION EN 3 ÉTAPES (10-15 minutes)                    │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 1 : DOUBLE-CLIQUEZ SUR LE FICHIER
+═══════════════════════════════════════════════════════════════
+
+Dans ce dossier, trouvez le fichier :
+
+    📄 INSTALLER_SIMPLE.sh
+
+✅ DOUBLE-CLIQUEZ dessus
+
+Choisissez : "Execute" ou "Exécuter"
+
+Une fenêtre noire s'ouvre → C'est bon !
+
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 2 : SUIVEZ LES INSTRUCTIONS À L'ÉCRAN
+═══════════════════════════════════════════════════════════════
+
+Dans la fenêtre noire :
+
+1. Appuyez sur ENTRÉE pour commencer
+
+2. Tapez votre MOT DE PASSE quand demandé
+   ⚠️  C'est normal si vous ne voyez rien s'afficher !
+
+3. ☕ ATTENDEZ 10-15 minutes
+   - Vous verrez défiler les étapes 1/7, 2/7, etc.
+   - C'est NORMAL si ça semble lent
+   - NE FERMEZ PAS la fenêtre !
+
+4. À la fin, vous verrez :
+   ╔═══════════════════════════════════════════╗
+   ║  ✅ INSTALLATION TERMINÉE !               ║
+   ╚═══════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 3 : REDÉMARREZ LE RASPBERRY PI
+═══════════════════════════════════════════════════════════════
+
+Quand on vous demande :
+"Voulez-vous redémarrer maintenant ? (o/n)"
+
+→ Tapez : o
+→ Appuyez sur ENTRÉE
+
+Le Raspberry Pi redémarre automatiquement.
+
+
+═══════════════════════════════════════════════════════════════
+  APRÈS LE REDÉMARRAGE : DÉMARRER L'APPLICATION
+═══════════════════════════════════════════════════════════════
+
+1. Retournez dans ce dossier solar-monitor
+
+2. DOUBLE-CLIQUEZ sur :
+   📄 start_app.sh
+
+3. Choisissez "Execute"
+
+4. Ouvrez le navigateur web
+
+5. Tapez dans la barre d'adresse :
+   localhost:3000
+
+6. ✅ L'APPLICATION S'OUVRE !
+
+
+═══════════════════════════════════════════════════════════════
+  UTILISATION QUOTIDIENNE
+═══════════════════════════════════════════════════════════════
+
+Pour DÉMARRER l'application :
+→ Double-clic sur : start_app.sh
+
+Pour ARRÊTER l'application :
+→ Double-clic sur : stop_app.sh
+
+Pour ACCÉDER à l'application :
+→ Navigateur → localhost:3000
+
+
+═══════════════════════════════════════════════════════════════
+  ACCÈS DEPUIS TÉLÉPHONE/TABLETTE
+═══════════════════════════════════════════════════════════════
+
+1. Dans l'application, allez dans "Paramètres"
+
+2. Regardez la section "Réseau Local"
+   Vous verrez une IP (ex: 192.168.1.50)
+
+3. Sur votre téléphone/tablette (même WiFi) :
+   Ouvrez le navigateur
+   Tapez : http://192.168.1.50:3000
+   (remplacez par VOTRE IP)
+
+4. ✅ L'application s'affiche sur votre téléphone !
+
+
+═══════════════════════════════════════════════════════════════
+  SI ÇA NE MARCHE PAS
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME : La fenêtre se ferme immédiatement
+SOLUTION : Ouvrez un Terminal manuellement
+          Menu → Accessoires → Terminal
+          Tapez : cd ~/Downloads/solar-monitor-main
+          Tapez : bash INSTALLER_SIMPLE.sh
+
+PROBLÈME : Erreur "MongoDB"
+SOLUTION : C'EST NORMAL ! L'installation continue quand même.
+          L'application fonctionnera en mode SIMULATION.
+
+PROBLÈME : L'onduleur n'est pas détecté
+SOLUTION : 1. Branchez le câble USB
+          2. Dans Paramètres → Cliquez "Mode REAL"
+          3. Dans Onduleurs → "Scanner automatiquement"
+
+PROBLÈME : "Permission denied" sur /dev/ttyUSB0
+SOLUTION : Redémarrez le Raspberry Pi avec : sudo reboot
+
+
+═══════════════════════════════════════════════════════════════
+  FICHIERS IMPORTANTS DANS CE DOSSIER
+═══════════════════════════════════════════════════════════════
+
+INSTALLER_SIMPLE.sh    → Pour installer (une seule fois)
+start_app.sh           → Pour démarrer l'application
+stop_app.sh            → Pour arrêter l'application
+
+GUIDE_VISUEL.md        → Guide illustré détaillé
+INSTALLATION_FACILE.md → Instructions complètes
+RASPBERRY_PI_SETUP.md  → Guide technique avancé
+
+
+═══════════════════════════════════════════════════════════════
+  RÉCAPITULATIF ULTRA RAPIDE
+═══════════════════════════════════════════════════════════════
+
+1. Double-clic : INSTALLER_SIMPLE.sh
+2. Entrée → Mot de passe → Attendre 15 min
+3. Redémarrer (o)
+4. Double-clic : start_app.sh
+5. Navigateur → localhost:3000
+6. ✅ TERMINÉ !
+
+
+═══════════════════════════════════════════════════════════════
+
+  🌞 Profitez de votre monitoring solaire ! 🌞
+
+═══════════════════════════════════════════════════════════════

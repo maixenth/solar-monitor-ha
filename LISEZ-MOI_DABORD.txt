@@ -1,0 +1,143 @@
+═══════════════════════════════════════════════════════════════
+    🌞 SOLAR MONITOR - APPLICATION DE MONITORING SOLAIRE 🌞
+═══════════════════════════════════════════════════════════════
+
+Bienvenue ! Ce dossier contient tout ce dont vous avez besoin pour
+surveiller vos onduleurs solaires GROWATT et MPPSOLAR.
+
+
+📚 GUIDES DISPONIBLES (choisissez celui qui vous convient)
+═══════════════════════════════════════════════════════════════
+
+🎯 VOUS N'ÊTES PAS À L'AISE AVEC L'INFORMATIQUE ?
+   → Ouvrez : GUIDE_VISUEL.md
+   Guide illustré étape par étape avec des schémas
+
+🚀 INSTALLATION RAPIDE (10 minutes) ?
+   → Double-cliquez sur : INSTALLER_FACILE.sh
+   Script automatique qui fait tout pour vous
+
+📖 INSTALLATION DÉTAILLÉE MAIS SIMPLE ?
+   → Ouvrez : INSTALLATION_FACILE.md
+   Guide complet sans commandes compliquées
+
+💻 VOUS ÊTES TECHNIQUE / DÉVELOPPEUR ?
+   → Ouvrez : RASPBERRY_PI_SETUP.md
+   Documentation technique complète
+
+
+⚡ INSTALLATION EXPRESS (pour les pressés)
+═══════════════════════════════════════════════════════════════
+
+1. Double-cliquez sur : INSTALLER_FACILE.sh
+2. Appuyez sur Entrée
+3. Entrez votre mot de passe si demandé
+4. Attendez 10-15 minutes ☕
+5. Redémarrez le Raspberry Pi
+6. Lancez : start_app.sh
+7. Ouvrez le navigateur → localhost:3000
+
+✅ C'est terminé !
+
+
+📦 CONTENU DU DOSSIER
+═══════════════════════════════════════════════════════════════
+
+📁 backend/              Code du serveur (Python)
+📁 frontend/             Interface web (React)
+
+📄 INSTALLER_FACILE.sh   ⭐ Installation automatique
+📄 GUIDE_VISUEL.md       ⭐ Guide avec images
+📄 INSTALLATION_FACILE.md Guide détaillé simple
+
+📄 RASPBERRY_PI_SETUP.md Guide technique complet
+📄 README.md             Documentation développeur
+
+📄 start_app.sh          Démarrer l'application
+📄 stop_app.sh           Arrêter l'application
+📄 restart_app.sh        Redémarrer l'application
+
+
+🎯 POUR DÉMARRER L'APPLICATION (après installation)
+═══════════════════════════════════════════════════════════════
+
+1. Double-cliquez sur : start_app.sh
+2. Ouvrez le navigateur
+3. Allez sur : http://localhost:3000
+
+
+❓ QUESTIONS FRÉQUENTES
+═══════════════════════════════════════════════════════════════
+
+Q: Je ne comprends rien aux commandes Linux
+A: Pas de problème ! Suivez GUIDE_VISUEL.md
+
+Q: L'installation prend combien de temps ?
+A: 10-15 minutes avec INSTALLER_FACILE.sh
+
+Q: Dois-je avoir un onduleur branché pour tester ?
+A: Non ! L'app fonctionne en mode SIMULATION sans matériel
+
+Q: Comment accéder depuis mon téléphone ?
+A: Voir section "Accès Mobile" dans GUIDE_VISUEL.md
+
+Q: Ça marche avec quel onduleur ?
+A: GROWATT (Modbus RS485) et MPPSOLAR (USB)
+
+Q: C'est gratuit ?
+A: Oui, complètement gratuit et open-source
+
+
+🆘 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════
+
+1. Consultez GUIDE_VISUEL.md (section "Problèmes Fréquents")
+2. Lisez INSTALLATION_FACILE.md (section "Dépannage")
+3. Vérifiez RASPBERRY_PI_SETUP.md (section troubleshooting)
+
+
+🌐 ACCÈS À L'APPLICATION
+═══════════════════════════════════════════════════════════════
+
+Sur le Raspberry Pi :
+👉 http://localhost:3000
+
+Depuis un autre appareil (même WiFi) :
+👉 http://[IP_DU_RASPBERRY]:3000
+   (L'IP est affichée dans Paramètres de l'application)
+
+
+✨ FONCTIONNALITÉS
+═══════════════════════════════════════════════════════════════
+
+✅ Dashboard en temps réel avec flux énergétique animé
+✅ Graphiques de production et consommation
+✅ Statistiques détaillées et économies
+✅ Détection automatique des onduleurs
+✅ Multi-onduleurs supporté
+✅ Accès mobile
+✅ Mode simulation pour tests
+
+
+🔧 CONFIGURATION
+═══════════════════════════════════════════════════════════════
+
+Mode SIMULATION (par défaut) :
+  Génère des données aléatoires pour tester sans matériel
+
+Mode REAL (avec onduleur branché) :
+  1. Branchez l'onduleur via USB
+  2. Ouvrez l'application
+  3. Paramètres → Cliquez sur "Mode REAL"
+  4. Onduleurs → Scanner automatiquement
+
+
+🎉 PROFITEZ DE VOTRE ÉNERGIE SOLAIRE !
+═══════════════════════════════════════════════════════════════
+
+Questions ? → Consultez les guides mentionnés ci-dessus
+Problème ? → Section dépannage dans chaque guide
+
+Bon monitoring solaire ! 🌞
+
+═══════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, Settings, Sun, BarChart3, LineChart, Activity } from "lucide-react";
+import { Home, Settings, Sun, BarChart3, LineChart, Activity, Plug } from "lucide-react";
 
 const Sidebar = () => {
   return (

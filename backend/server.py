@@ -1080,40 +1080,60 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting Solar Monitoring API with Energy Management...")
+    logger.info("Starting Solar Monitoring API with Home Assistant & Weather...")
     
-    # Auto-discover inverters at startup
-    logger.info("🔍 Starting automatic inverter discovery...")
-    try:
-        discovered = auto_discover_inverters()
-        logger.info(f"✨ Auto-discovery: {len(discovered)} inverters found")
-        
-        # Add discovered inverters to database
-        for inv_data in discovered:
-            existing = await db.inverters.find_one({
-                "port": inv_data['port'],
-                "slave_id": inv_data.get('slave_id')
-            })
+    # Initialize Weather Service
+    weather_api_key = os.environ.get('WEATHER_API_KEY', '')
+    weather_city = os.environ.get('WEATHER_CITY', 'Cotonou')
+    weather_country = os.environ.get('WEATHER_COUNTRY', 'BJ')
+    initialize_weather_service(weather_api_key, weather_city, weather_country)
+    
+    # Initialize Home Assistant if configured
+    if HA_URL and HA_TOKEN:
+        logger.info("🏠 Initializing Home Assistant connection...")
+        success = initialize_ha_reader(HA_URL, HA_TOKEN)
+        if success:
+            logger.info("✅ Home Assistant initialized successfully")
+        else:
+            logger.warning("⚠️ Home Assistant initialization failed")
+    else:
+        logger.info("ℹ️ Home Assistant not configured (will use SIMULATION mode)")
+    
+    # Auto-discover physical inverters only if not in HOME_ASSISTANT mode
+    if INVERTER_MODE != 'HOME_ASSISTANT':
+        logger.info("🔍 Starting automatic inverter discovery...")
+        try:
+            discovered = auto_discover_inverters()
+            logger.info(f"✨ Auto-discovery: {len(discovered)} inverters found")
             
-            if not existing:
-                inverter = Inverter(**inv_data)
-                inverter.status = "connected"
+            # Add discovered inverters to database
+            for inv_data in discovered:
+                existing = await db.inverters.find_one({
+                    "port": inv_data['port'],
+                    "slave_id": inv_data.get('slave_id')
+                })
                 
-                doc = inverter.model_dump()
-                doc['created_at'] = doc['created_at'].isoformat()
-                if doc['last_reading']:
-                    doc['last_reading'] = doc['last_reading'].isoformat()
-                
-                await db.inverters.insert_one(doc)
-                logger.info(f"✅ Auto-added: {inv_data['name']}")
-    except Exception as e:
-        logger.error(f"Error during auto-discovery: {e}")
+                if not existing:
+                    inverter = Inverter(**inv_data)
+                    inverter.status = "connected"
+                    
+                    doc = inverter.model_dump()
+                    doc['created_at'] = doc['created_at'].isoformat()
+                    if doc['last_reading']:
+                        doc['last_reading'] = doc['last_reading'].isoformat()
+                    
+                    await db.inverters.insert_one(doc)
+                    logger.info(f"✅ Auto-added: {inv_data['name']}")
+        except Exception as e:
+            logger.error(f"Error during auto-discovery: {e}")
+    else:
+        logger.info("ℹ️ Skipping physical inverter discovery (HOME_ASSISTANT mode)")
     
     # Start background scheduler for reading collection
     scheduler.add_job(collect_readings, 'interval', seconds=5)
     scheduler.start()
     
-    logger.info("Scheduler started - collecting readings every 5 seconds")
+    logger.info("✅ Scheduler started - collecting readings every 5 seconds")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

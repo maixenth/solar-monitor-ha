@@ -7,6 +7,7 @@ import Statistics from "./pages/Statistics";
 import InverterManagement from "./pages/InverterManagement";
 import InverterDetail from "./pages/InverterDetail";
 import Settings from "./pages/Settings";
+import HomeAssistantConfig from "./pages/HomeAssistantConfig";
 import Sidebar from "./components/Sidebar";
 import "@/App.css";
 

@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Charts = () => {
-  const [period, setPeriod] = useState("today");
+  const [period, setPeriod] = useState("week");
   const [chartData, setChartData] = useState([]);
   const [performanceData, setPerformanceData] = useState(null);
   const [loading, setLoading] = useState(true);

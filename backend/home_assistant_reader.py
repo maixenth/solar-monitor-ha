@@ -283,6 +283,7 @@ class HomeAssistantReader:
             "grid_power": grid_power,
             "grid_voltage": 230.0,
             "grid_frequency": 50.0,
+            "load_power": load_power,  # Actual load power from Home Assistant
             "temperature": 45.0,  # Default inverter temp if not available
             "status": "ok"
         }

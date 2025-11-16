@@ -799,11 +799,11 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
     
     inverters = await db.inverters.find({}, {"_id": 0}).to_list(1000)
     
-    # Get readings
+    # Get readings (limited to 2000 for performance)
     current_readings = await db.readings.find(
         {"timestamp": {"$gte": start_time.isoformat()}},
         {"_id": 0}
-    ).to_list(10000)
+    ).sort("timestamp", 1).to_list(2000)
     
     prev_readings = await db.readings.find(
         {
@@ -813,7 +813,7 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
             }
         },
         {"_id": 0}
-    ).to_list(10000)
+    ).sort("timestamp", 1).to_list(2000)
     
     # Calculate statistics
     total_production = 0

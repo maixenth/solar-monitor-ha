@@ -27,6 +27,7 @@ function App() {
               <Route path="/statistics" element={<Statistics />} />
               <Route path="/inverters" element={<InverterManagement />} />
               <Route path="/inverters/:id" element={<InverterDetail />} />
+              <Route path="/home-assistant" element={<HomeAssistantConfig />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </main>

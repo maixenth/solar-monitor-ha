@@ -731,14 +731,16 @@ async def get_dashboard_stats():
                 total_solar_power += reading.get('ac_power', 0) or 0
                 total_battery_power += reading.get('battery_power', 0) or 0
                 total_grid_power += reading.get('grid_power', 0) or 0
+                total_load_power += reading.get('load_power', 0) or 0  # Read actual load power
                 total_energy_today += reading.get('energy_today', 0) or 0
                 total_energy_total += reading.get('energy_total', 0) or 0
                 
                 if reading.get('battery_soc'):
                     battery_socs.append(reading['battery_soc'])
     
-    # Calculate total load
-    total_load_power = total_solar_power + abs(total_battery_power) + total_grid_power
+    # If load_power not available in readings, calculate it as fallback
+    if total_load_power == 0:
+        total_load_power = total_solar_power + abs(total_battery_power) + total_grid_power
     
     # Get energy management config
     config = await get_energy_management()

@@ -180,25 +180,25 @@ class HomeAssistantReader:
     def read_solar_data(self, entity_mapping: Dict[str, str]) -> Dict[str, Any]:
         """
         Read solar data from configured entities
+        Supports multiple inverters by summing values with _inv1 and _inv2 suffixes
         
         Args:
             entity_mapping: Dictionary mapping data types to entity IDs
                 Example:
                 {
                     "solar_power": "sensor.solar_assistant_pv_power",
+                    "solar_power_inv2": "sensor.inverter_2_pv_power",  # Optional second inverter
                     "battery_soc": "sensor.solar_assistant_battery_soc",
-                    "battery_power": "sensor.solar_assistant_battery_power",
-                    "grid_power": "sensor.solar_assistant_grid_power",
-                    "load_power": "sensor.solar_assistant_load_power",
-                    "energy_today": "sensor.solar_assistant_energy_today",
-                    "energy_total": "sensor.solar_assistant_energy_total"
+                    ...
                 }
         
         Returns:
-            Dictionary with solar data
+            Dictionary with solar data (aggregated for multiple inverters)
         """
         data = {}
         
+        # First pass: collect all values
+        raw_data = {}
         for data_type, entity_id in entity_mapping.items():
             if entity_id:
                 entity_state = self.get_entity_state(entity_id)
@@ -208,13 +208,33 @@ class HomeAssistantReader:
                         
                         # Convert to float, handle 'unknown' or 'unavailable'
                         if state_value in ["unknown", "unavailable", None]:
-                            data[data_type] = 0.0
+                            raw_data[data_type] = 0.0
                         else:
-                            data[data_type] = float(state_value)
+                            raw_data[data_type] = float(state_value)
                     except (ValueError, TypeError):
-                        data[data_type] = 0.0
+                        raw_data[data_type] = 0.0
                 else:
-                    data[data_type] = 0.0
+                    raw_data[data_type] = 0.0
+        
+        # Second pass: aggregate multiple inverters
+        # For metrics with _inv2 suffix, add them to the base metric
+        aggregated_keys = set()
+        
+        for key, value in raw_data.items():
+            if key.endswith('_inv2'):
+                # This is inverter 2, add to base metric
+                base_key = key[:-5]  # Remove '_inv2'
+                if base_key in raw_data:
+                    data[base_key] = raw_data[base_key] + value
+                    aggregated_keys.add(base_key)
+                    aggregated_keys.add(key)
+                else:
+                    # No inv1, use inv2 value as base
+                    data[base_key] = value
+                    aggregated_keys.add(key)
+            elif key not in aggregated_keys:
+                # Regular metric or already aggregated
+                data[key] = value
         
         return data
     

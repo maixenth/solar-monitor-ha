@@ -128,14 +128,26 @@ async def import_today():
         if entity_id and not data_type.endswith('_inv2'):  # Only fetch base entities, inv2 will be added
             history = fetch_history_today(entity_id)
             if history:
-                histories[data_type] = {item['last_updated']: item['state'] for item in history}
+                # Handle different timestamp key names
+                history_dict = {}
+                for item in history:
+                    ts = item.get('last_updated') or item.get('timestamp') or item.get('last_changed')
+                    if ts:
+                        history_dict[ts] = item['state']
+                histories[data_type] = history_dict
     
     # Fetch inv2 entities
     for data_type, entity_id in entity_mapping.items():
         if entity_id and data_type.endswith('_inv2'):
             history = fetch_history_today(entity_id)
             if history:
-                histories[data_type] = {item['last_updated']: item['state'] for item in history}
+                # Handle different timestamp key names
+                history_dict = {}
+                for item in history:
+                    ts = item.get('last_updated') or item.get('timestamp') or item.get('last_changed')
+                    if ts:
+                        history_dict[ts] = item['state']
+                histories[data_type] = history_dict
     
     if not histories:
         logger.error("No data retrieved")

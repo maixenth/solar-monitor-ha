@@ -166,7 +166,13 @@ async def import_history(days: int = 30, batch_size: int = 1000):
         if entity_id:
             history = fetch_history(entity_id, days)  # This is a regular function, not async
             if history:
-                histories[data_type] = {item['last_updated']: item['state'] for item in history}
+                # Handle different response formats
+                history_dict = {}
+                for item in history:
+                    timestamp_key = item.get('last_updated') or item.get('timestamp') or item.get('last_changed')
+                    if timestamp_key:
+                        history_dict[timestamp_key] = item['state']
+                histories[data_type] = history_dict
     
     if not histories:
         logger.error("No historical data retrieved")

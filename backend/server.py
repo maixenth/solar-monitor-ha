@@ -115,6 +115,9 @@ class InverterReading(BaseModel):
     grid_voltage: Optional[float] = None  # Volts
     grid_frequency: Optional[float] = None  # Hz
     
+    # Load metrics
+    load_power: Optional[float] = None  # Watts (house consumption)
+    
     # System
     temperature: Optional[float] = None  # Inverter temperature
     status: str = "ok"  # "ok", "warning", "error"

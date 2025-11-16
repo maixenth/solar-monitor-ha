@@ -899,10 +899,25 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
         inverter_stats[inv_id]['total_dc'] += dc_power
         inverter_stats[inv_id]['total_ac'] += ac_power
         inverter_stats[inv_id]['count'] += 1
-        total_production += energy
+        # Note: total_production will be set to total_solar_energy below
     
-    prev_total = sum(r.get('energy_today', 0) or 0 for r in prev_readings) if prev_readings else 0
-    production_change = ((total_production - prev_total) / prev_total * 100) if prev_total > 0 else 0
+    # Use calculated solar energy from trapezoidal integration instead of energy_today
+    # (energy_today may not be available in Home Assistant)
+    total_production = total_solar_energy
+    
+    # Calculate previous period's production for comparison
+    prev_solar_energy = 0
+    for i, reading in enumerate(prev_readings):
+        if i < len(prev_readings) - 1:
+            next_reading = prev_readings[i + 1]
+            current_time = datetime.fromisoformat(reading['timestamp'])
+            next_time = datetime.fromisoformat(next_reading['timestamp'])
+            delta_hours = (next_time - current_time).total_seconds() / 3600
+            
+            avg_solar = ((reading.get('ac_power', 0) or 0) + (next_reading.get('ac_power', 0) or 0)) / 2
+            prev_solar_energy += avg_solar * delta_hours / 1000
+    
+    production_change = ((total_production - prev_solar_energy) / prev_solar_energy * 100) if prev_solar_energy > 0 else 0
     
     avg_power = total_power / count if count > 0 else 0
     avg_efficiency = (total_ac_power / total_dc_power * 100) if total_dc_power > 0 else 0

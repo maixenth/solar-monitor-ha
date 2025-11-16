@@ -804,11 +804,13 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
     
     inverters = await db.inverters.find({}, {"_id": 0}).to_list(1000)
     
-    # Get readings (limited to 2000 for performance)
+    # Get readings (increased limit to handle Home Assistant's frequent data points)
+    # Home Assistant with Solar Assistant can generate 1 reading every 10-20 seconds
+    # which is ~4000-8000 readings per day
     current_readings = await db.readings.find(
         {"timestamp": {"$gte": start_time.isoformat()}},
         {"_id": 0}
-    ).sort("timestamp", 1).to_list(2000)
+    ).sort("timestamp", 1).to_list(20000)
     
     prev_readings = await db.readings.find(
         {
@@ -818,7 +820,7 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
             }
         },
         {"_id": 0}
-    ).sort("timestamp", 1).to_list(2000)
+    ).sort("timestamp", 1).to_list(20000)
     
     # Calculate statistics
     total_production = 0

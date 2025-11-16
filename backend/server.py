@@ -835,27 +835,42 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
     
     inverter_stats = {}
     
-    for reading in current_readings:
+    # Calculate time intervals between readings
+    total_consumption = 0
+    prev_timestamp = None
+    
+    for i, reading in enumerate(current_readings):
         energy = reading.get('energy_today', 0) or 0
         ac_power = reading.get('ac_power', 0) or 0
         dc_power = reading.get('dc_power', 0) or 0
         grid_power = reading.get('grid_power', 0) or 0
         battery_power = reading.get('battery_power', 0) or 0
+        load_power = reading.get('load_power', 0) or 0
+        
+        # Calculate time interval
+        current_timestamp = datetime.fromisoformat(reading['timestamp'])
+        if prev_timestamp:
+            delta_hours = (current_timestamp - prev_timestamp).total_seconds() / 3600
+        else:
+            delta_hours = 5 / 3600  # Default 5 seconds
+        
+        prev_timestamp = current_timestamp
         
         total_power += ac_power
         total_dc_power += dc_power
         total_ac_power += ac_power
-        total_solar_energy += ac_power * (5/3600)  # 5 seconds intervals to kWh
+        total_solar_energy += ac_power * delta_hours  # kWh
+        total_consumption += load_power * delta_hours  # kWh
         
         if grid_power > 0:
-            total_grid_import += grid_power * (5/3600)
+            total_grid_import += grid_power * delta_hours
         else:
-            total_grid_export += abs(grid_power) * (5/3600)
+            total_grid_export += abs(grid_power) * delta_hours
         
         if battery_power > 0:
-            total_battery_charge += battery_power * (5/3600)
+            total_battery_charge += battery_power * delta_hours
         else:
-            total_battery_discharge += abs(battery_power) * (5/3600)
+            total_battery_discharge += abs(battery_power) * delta_hours
         
         if ac_power > peak_power:
             peak_power = ac_power

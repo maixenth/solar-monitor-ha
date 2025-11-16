@@ -108,7 +108,7 @@ const Sidebar = () => {
       <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-200">
         <div className="text-xs text-slate-500">
           <p className="font-medium mb-1">Solar Monitoring System</p>
-          <p>GROWATT • MPPSOLAR</p>
+          <p>Home Assistant • Solar Assistant</p>
         </div>
       </div>
     </aside>

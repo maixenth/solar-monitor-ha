@@ -23,7 +23,7 @@ const Dashboard = () => {
       const [statsRes, invertersRes, dailyRes] = await Promise.all([
         axios.get(`${API}/dashboard/stats`),
         axios.get(`${API}/inverters`),
-        axios.get(`${API}/statistics/period?period=today`)
+        axios.get(`${API}/statistics/period?period=week`)
       ]);
       setStats(statsRes.data);
       setInverters(invertersRes.data);

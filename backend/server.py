@@ -835,9 +835,8 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
     
     inverter_stats = {}
     
-    # Calculate time intervals between readings
+    # Use trapezoidal integration for energy calculation (more accurate)
     total_consumption = 0
-    prev_timestamp = None
     
     for i, reading in enumerate(current_readings):
         energy = reading.get('energy_today', 0) or 0
@@ -847,30 +846,36 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
         battery_power = reading.get('battery_power', 0) or 0
         load_power = reading.get('load_power', 0) or 0
         
-        # Calculate time interval
-        current_timestamp = datetime.fromisoformat(reading['timestamp'])
-        if prev_timestamp:
-            delta_hours = (current_timestamp - prev_timestamp).total_seconds() / 3600
-        else:
-            delta_hours = 5 / 3600  # Default 5 seconds
-        
-        prev_timestamp = current_timestamp
-        
         total_power += ac_power
         total_dc_power += dc_power
         total_ac_power += ac_power
-        total_solar_energy += ac_power * delta_hours  # kWh
-        total_consumption += load_power * delta_hours  # kWh
         
-        if grid_power > 0:
-            total_grid_import += grid_power * delta_hours
-        else:
-            total_grid_export += abs(grid_power) * delta_hours
-        
-        if battery_power > 0:
-            total_battery_charge += battery_power * delta_hours
-        else:
-            total_battery_discharge += abs(battery_power) * delta_hours
+        # Use trapezoidal rule: average of current and next reading × time interval
+        if i < len(current_readings) - 1:
+            next_reading = current_readings[i + 1]
+            current_time = datetime.fromisoformat(reading['timestamp'])
+            next_time = datetime.fromisoformat(next_reading['timestamp'])
+            delta_hours = (next_time - current_time).total_seconds() / 3600
+            
+            # Average power over interval
+            avg_solar = (ac_power + (next_reading.get('ac_power', 0) or 0)) / 2
+            avg_load = (load_power + (next_reading.get('load_power', 0) or 0)) / 2
+            avg_grid = (grid_power + (next_reading.get('grid_power', 0) or 0)) / 2
+            avg_battery = (battery_power + (next_reading.get('battery_power', 0) or 0)) / 2
+            
+            # Accumulate energy
+            total_solar_energy += avg_solar * delta_hours / 1000  # W → kWh
+            total_consumption += avg_load * delta_hours / 1000  # W → kWh
+            
+            if avg_grid > 0:
+                total_grid_import += avg_grid * delta_hours / 1000
+            else:
+                total_grid_export += abs(avg_grid) * delta_hours / 1000
+            
+            if avg_battery > 0:
+                total_battery_charge += avg_battery * delta_hours / 1000
+            else:
+                total_battery_discharge += abs(avg_battery) * delta_hours / 1000
         
         if ac_power > peak_power:
             peak_power = ac_power

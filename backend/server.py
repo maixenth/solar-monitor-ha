@@ -964,6 +964,7 @@ async def get_period_statistics(period: str = "today", start_date: Optional[str]
     return {
         'total_production': total_production,
         'total_solar_energy': round(total_solar_energy, 2),
+        'total_consumption': round(total_consumption, 2),  # Added consumption
         'total_grid_import': round(total_grid_import, 2),
         'total_grid_export': round(total_grid_export, 2),
         'total_battery_charge': round(total_battery_charge, 2),

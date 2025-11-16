@@ -160,11 +160,11 @@ async def import_history(days: int = 30, batch_size: int = 1000):
     
     inverter_id = virtual_inv['id']
     
-    # Fetch history for all entities in parallel
+    # Fetch history for all entities
     histories = {}
     for data_type, entity_id in entity_mapping.items():
         if entity_id:
-            history = await asyncio.to_thread(fetch_history, entity_id, days)
+            history = fetch_history(entity_id, days)  # This is a regular function, not async
             if history:
                 histories[data_type] = {item['last_updated']: item['state'] for item in history}
     

@@ -328,6 +328,7 @@ async def collect_readings():
                             connection_type="API",
                             port="N/A",
                             baudrate=0,
+                            slave_id=None,
                             battery_capacity=BATTERY_CAPACITY_KWH,
                             status="connected"
                         )

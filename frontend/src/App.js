@@ -30,6 +30,7 @@ function App() {
               <Route path="/inverters/:id" element={<InverterDetail />} />
               <Route path="/home-assistant" element={<HomeAssistantConfig />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/test-api" element={<TestAPI />} />
             </Routes>
           </main>
         </div>

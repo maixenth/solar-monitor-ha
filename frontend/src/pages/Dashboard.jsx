@@ -186,9 +186,9 @@ const Dashboard = () => {
               </h3>
             </div>
             <div>
-              <p className="text-xs text-slate-500 mb-1">Aujourd'hui (estimé)</p>
+              <p className="text-xs text-slate-500 mb-1">Aujourd'hui</p>
               <h3 className="text-xl font-bold text-purple-700" data-testid="load-energy-today">
-                {((dailyStats?.total_solar_energy || 0) + (dailyStats?.total_grid_import || 0) - (dailyStats?.total_grid_export || 0)).toFixed(2)} kWh
+                {dailyStats?.total_consumption?.toFixed(2) || 0} kWh
               </h3>
             </div>
           </div>

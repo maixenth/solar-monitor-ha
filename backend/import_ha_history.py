@@ -40,7 +40,7 @@ async def get_entity_mapping():
     return config['entity_mapping']
 
 
-async def fetch_history(entity_id: str, days: int = 30):
+def fetch_history(entity_id: str, days: int = 30):
     """
     Fetch history for an entity from Home Assistant
     
